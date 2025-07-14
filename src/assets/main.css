@@ -1,0 +1,46 @@
+@import './base.css';
+
+/* Estilos base após reset */
+body {
+  background-color: #006633; /* ✅ fundo verde garantido */
+  font-family: 'Segoe UI', Arial, sans-serif;
+  font-size: 16px;
+  color: white;
+  line-height: 1.5;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  text-decoration: none;
+  color: inherit;
+}
+
+button {
+  font-family: inherit;
+  font-size: inherit;
+  cursor: pointer;
+  border: none;
+  background: none;
+}
+
+/* Seu topo */
+.topo {
+  border-top: 6px solid #006633;
+  border-radius: 12px;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 20px;
+}
+
+.topo img {
+  width: 30%;
+}
+
+.carrinho span {
+  font-size: 24px;
+  color: #006633;
+  padding: 10px;
+  border-radius: 10px;
+}
