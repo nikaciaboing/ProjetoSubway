@@ -21,20 +21,21 @@
   display: flex;
   justify-content: space-between;
   align-items: center;
-  padding: 15px 30px;
-  background-color: #006633;
+  padding: 40vw 30px 0 30px;
   font-size: 18px;
+  
 }
 
 .redes span {
   margin-right: 15px;
   cursor: pointer;
-  color: white;
+  color: #006633;
 }
 
 .contato {
   position: relative;
   cursor: pointer;
+  color: #006633;
 }
 
 .caixa {

@@ -1,22 +1,42 @@
+<script setup>
+import { ref } from 'vue'
+import { useRouter } from 'vue-router'
+
+const router = useRouter()
+
+// Campos do formulário
+const nome = ref('')
+const telefone = ref('')
+
+// Função chamada no envio do formulário
+function enviarCadastro() {
+  if (nome.value && telefone.value) {
+    
+    console.log('Cadastro enviado:', nome.value, telefone.value)
+
+    // Redireciona para a página de lanches
+    router.push({ name: 'lanches' })
+  } else {
+    alert('Preencha todos os campos obrigatórios.')
+  }
+}
+</script>
 <template>
   <section cadastro>
     <h2>Cadastro para Pedido</h2>
-    <form action="#">
+    <form @submit.prevent="enviarCadastro">
       <p>
         <label for="nome">Nome (Obrigatório)</label>
-        <input placeholder="nome completo" required id="nome" type="text" />
+        <input placeholder="nome completo" required id="nome" type="text" v-model="nome" />
       </p>
       <p>
         <label for="tel">Número de Telefone (obrigatório)</label>
-        <input placeholder="(xx) XXXX-XXXX" id="tel" required type="tel" />
+        <input placeholder="(xx) XXXX-XXXX" id="tel" required type="tel" v-model="telefone" />
       </p>
       <button type="submit">Enviar Cadastro</button>
     </form>
   </section>
 </template>
-
-<script setup>
-</script>
 
 <style scoped>
 section[cadastro] {
@@ -26,7 +46,6 @@ section[cadastro] {
   margin: 40px auto;
   border-radius: 12px;
   box-shadow: 0 0 15px rgba(0, 0, 0, 0.1);
-  border-top: 6px solid #009639;
   font-family: 'Segoe UI', sans-serif;
 }
 

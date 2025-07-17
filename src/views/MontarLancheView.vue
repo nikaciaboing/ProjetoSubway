@@ -1,4 +1,5 @@
 <script setup>
+import { RouterLink } from 'vue-router';
 // Lista de ingredientes com quantidade
 const ingredientesSelecionados = [];
 
@@ -85,7 +86,7 @@ function removerIngrediente(index) {
 function limparIngredientes() {
   ingredientesSelecionados.length = 0;
   document.querySelectorAll('.quantidade').forEach(el => el.textContent = "0");
-  atualizarLista();
+  atualizarLista(); 
 }
 </script>
 <template>
@@ -97,7 +98,7 @@ function limparIngredientes() {
                 <h3>Pães</h3>
                 <div class="ingredientes">
                     <div class="ingrediente-card" data-nome="Italiano Branco" data-categoria="Pães" data-preco="2.50">
-                        <img src="/subway/public/images/pao_italiano_branco.png" alt="Italiano Branco" />
+                        <img src="/images/pao_italiano_branco.png" alt="Italiano Branco" />
                         <p><strong>Italiano Branco</strong></p>
                         <p class="preco">R$ 2,50</p>
                         <div class="controle">
@@ -108,7 +109,7 @@ function limparIngredientes() {
                     </div>
 
                     <div class="ingrediente-card" data-nome="Integral" data-categoria="Pães" data-preco="2.80">
-                        <img src="/subway/public/images/pao_9_graos.png" alt="Integral" />
+                        <img src="/images/pao_9_graos.png" alt="Integral" />
                         <p><strong>Integral</strong></p>
                         <p class="preco">R$ 2,80</p>
                         <div class="controle">
@@ -120,7 +121,7 @@ function limparIngredientes() {
 
                     <div class="ingrediente-card" data-nome="Parmesão e Orégano" data-categoria="Pães"
                         data-preco="3.00">
-                        <img src="/subway/public/images/pao_parmesao_e_oregano_.png" alt="Parmesão e Orégano" />
+                        <img src="/images/pao_parmesao_e_oregano_.png" alt="Parmesão e Orégano" />
                         <p><strong>Parmesão e Orégano</strong></p>
                         <p class="preco">R$ 3,00</p>
                         <div class="controle">
@@ -131,7 +132,7 @@ function limparIngredientes() {
                     </div>
 
                     <div class="ingrediente-card" data-nome="Três Queijos" data-categoria="Pães" data-preco="3.50">
-                        <img src="/subway/public/images/pao_3_queijos.png" alt="Três Queijos" />
+                        <img src="/images/pao_3_queijos.png" alt="Três Queijos" />
                         <p><strong>Três Queijos</strong></p>
                         <p class="preco">R$ 3,50</p>
                         <div class="controle">
@@ -148,7 +149,7 @@ function limparIngredientes() {
                 <h3>Carnes</h3>
                 <div class="ingredientes">
                     <div class="ingrediente-card" data-nome="Pepperoni" data-categoria="Carnes" data-preco="4.00">
-                        <img src="/subway/public/images/pepperone.png" alt="Pepperoni" />
+                        <img src="/images/pepperone.png" alt="Pepperoni" />
                         <p><strong>Pepperoni</strong></p>
                         <p class="preco">R$ 4,00</p>
                         <div class="controle">
@@ -159,7 +160,7 @@ function limparIngredientes() {
                     </div>
 
                     <div class="ingrediente-card" data-nome="Presunto" data-categoria="Carnes" data-preco="3.50">
-                        <img src="/subway/public/images/presunto.png" alt="Presunto" />
+                        <img src="/images/presunto.png" alt="Presunto" />
                         <p><strong>Presunto</strong></p>
                         <p class="preco">R$ 3,50</p>
                         <div class="controle">
@@ -170,7 +171,7 @@ function limparIngredientes() {
                     </div>
 
                     <div class="ingrediente-card" data-nome="Salame" data-categoria="Carnes" data-preco="4.20">
-                        <img src="/subway/public/images/salame.png" alt="Salame" />
+                        <img src="/images/salame.png" alt="Salame" />
                         <p><strong>Salame</strong></p>
                         <p class="preco">R$ 4,20</p>
                         <div class="controle">
@@ -181,7 +182,7 @@ function limparIngredientes() {
                     </div>
 
                     <div class="ingrediente-card" data-nome="Bacon" data-categoria="Carnes" data-preco="3.80">
-                        <img src="/subway/public/images/bacon.png" alt="Bacon" />
+                        <img src="/images/bacon.png" alt="Bacon" />
                         <p><strong>Bacon</strong></p>
                         <p class="preco">R$ 3,80</p>
                         <div class="controle">
@@ -199,7 +200,7 @@ function limparIngredientes() {
                 <div class="ingredientes">
                     <div class="ingrediente-card" data-nome="Queijo Mussarela" data-categoria="Queijos"
                         data-preco="2.70">
-                        <img src="/subway/public/images/sbw-queijo.png" alt="Queijo Mussarela" />
+                        <img src="/images/sbw-queijo.png" alt="Queijo Mussarela" />
                         <p><strong>Queijo Mussarela</strong></p>
                         <p class="preco">R$ 2,70</p>
                         <div class="controle">
@@ -216,7 +217,7 @@ function limparIngredientes() {
                 <h3>Molhos</h3>
                 <div class="ingredientes">
                     <div class="ingrediente-card" data-nome="Cheddar Cremoso" data-categoria="Molhos" data-preco="1.80">
-                        <img src="/subway/public/images/cheddar_cremoso.png" alt="Cheddar Cremoso" />
+                        <img src="/images/cheddar_cremoso.png" alt="Cheddar Cremoso" />
                         <p><strong>Cheddar Cremoso</strong></p>
                         <p class="preco">R$ 1,80</p>
                         <div class="controle">
@@ -227,7 +228,7 @@ function limparIngredientes() {
                     </div>
 
                     <div class="ingrediente-card" data-nome="Cream Cheese" data-categoria="Molhos" data-preco="1.60">
-                        <img src="/subway/public/images/cream_cheese.png" alt="Cream Cheese" />
+                        <img src="/images/cream_cheese.png" alt="Cream Cheese" />
                         <p><strong>Cream Cheese</strong></p>
                         <p class="preco">R$ 1,60</p>
                         <div class="controle">
@@ -248,8 +249,8 @@ function limparIngredientes() {
             </div>
 
             <div class="botoes">
-                <button type="button">⬅ Voltar</button>
-                <button type="submit">Continuar ➡</button>
+              <router-link to="/lanches"><button type="button">⬅ Voltar</button></router-link>
+              <router-link to="/bebidas"><button type="submit">Continuar ➡</button></router-link>
             </div>
         </section>
 </template>
@@ -262,7 +263,6 @@ function limparIngredientes() {
   margin: 40px auto;
   border-radius: 12px;
   box-shadow: 0 0 15px rgba(0,0,0,0.1);
-  border-top: 6px solid #009639;
 }
 
 /* ---------- INGREDIENTES ---------- */

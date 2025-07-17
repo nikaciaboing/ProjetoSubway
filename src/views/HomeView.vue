@@ -1,3 +1,7 @@
+<script setup>
+import { useProdutosStore } from '../stores/produtos'
+const produtosStore = useProdutosStore()
+</script>
 <template>
   <section id="inicio">
     <div class="conteudo">
@@ -14,6 +18,9 @@
 
 <style scoped>
 
+.inicio {
+  background-color: #006633;
+}
 .conteudo {
   display: flex;
   justify-content: center;
@@ -23,11 +30,14 @@
 
 .banner {
   text-align: center;
+  width: 90%;
+  padding: 40vw 20px;
 }
 
 .mensagem {
-  font-size: 32px;
-  margin: 30px 0;
+  font-size: 30px;
+  margin: 15vw 0;
+  font-weight: bold;
 }
 
 .botao {

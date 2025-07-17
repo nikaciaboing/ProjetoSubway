@@ -1,4 +1,6 @@
 <script setup>
+import { useRouter } from 'vue-router'
+const router = useRouter()
 // BOTÃO ENTREGA E RETIRADA 
 
 let tipoRecebimento = null;
@@ -30,12 +32,8 @@ function finalizarPedido() {
         <section class="opcao-entrega-retirada">
             <h3>Como você deseja receber seu lanche?</h3>
             <div class="opcoes">
-                <button class="opcao-btn" onclick="selecionarOpcao('Retirada')">🏃‍♂️ Retirada</button>
-                <button class="opcao-btn" onclick="selecionarOpcao('Entrega')">🛵 Entrega</button>
-            </div>
-
-            <div class="finalizar">
-                <button onclick="finalizarPedido()"> Escolher Forma de Pagamento </button>
+              <router-link to="/pagamento"><button class="opcao-btn">🏃‍♂️ Retirada</button></router-link>
+              <router-link to="/enderecoentrega"><button class="opcao-btn">🛵 Entrega</button></router-link> 
             </div>
         </section> 
 </template>
