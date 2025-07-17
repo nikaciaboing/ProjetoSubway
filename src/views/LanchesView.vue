@@ -1,203 +1,100 @@
 <script setup>
+import { reactive, computed } from 'vue'
 
-  const lanchesSelecionados = [];
+const precos = {
+  "Sanduíche Vegetariano": 34.00,
+  "Sanduíche Frango Teriyaki": 34.00,
+  "Sanduíche de Presunto": 34.00,
+  "Sanduíche Italiano": 34.00,
+  "Sanduíche Carne Suprema": 34.00,
+  "Sanduíche Carne Seca c/ Cream Cheese": 34.00
+}
 
-  const precos = {
-    "Sanduíche Vegetariano": 34.00,
-    "Sanduíche Frango Teriyaki": 34.00,
-    "Sanduíche de Presunto": 34.00,
-    "Sanduíche Italiano": 34.00,
-    "Sanduíche Carne Suprema": 34.00,
-    "Sanduíche Carne Seca c/ Cream Cheese": 34.00
-  };
+const lanches = reactive([
+  { nome: "Sanduíche Vegetariano", imagem: "/images/sanduiches-veg-vegetariano.jpg", quantidade: 0 },
+  { nome: "Sanduíche Frango Teriyaki", imagem: "/images/sanduiches-frango-teriyaki.jpg", quantidade: 0 },
+  { nome: "Sanduíche de Presunto", imagem: "/images/sanduiches-embutidos-presunto.jpg", quantidade: 0 },
+  { nome: "Sanduíche Italiano", imagem: "/images/sanduiches-embutidos-bmt-italiano.jpg", quantidade: 0 },
+  { nome: "Sanduíche Carne Suprema", imagem: "/images/sanduiches-carne-supreme.jpg", quantidade: 0 },
+  { nome: "Sanduíche Carne Seca c/ Cream Cheese", imagem: "/images/sanduiches-embutidos-bmt-italiano.jpg", quantidade: 0 }
+])
 
-  function alterarQuantidade(botao, delta) {
-    const li = botao.closest('li');
-    const nome = li.querySelector('p').textContent.trim();
-    const preco = precos[nome] || 0;
-    const spanQtd = li.querySelector('.quantidade');
+function alterarQuantidade(index, delta) {
+  const lanche = lanches[index]
+  lanche.quantidade = Math.max(0, lanche.quantidade + delta)
+}
 
-    let quantidadeAtual = parseInt(spanQtd.textContent) + delta;
-    if (quantidadeAtual < 0) quantidadeAtual = 0;
+function removerLanche(index) {
+  lanches[index].quantidade = 0
+}
 
-    spanQtd.textContent = quantidadeAtual;
+function limparLanches() {
+  lanches.forEach(lanche => lanche.quantidade = 0)
+}
 
-    const existente = lanchesSelecionados.find(item => item.nome === nome);
-    if (existente) {
-      existente.quantidade = quantidadeAtual;
-      existente.total = preco * quantidadeAtual;
-      if (quantidadeAtual === 0) {
-        const index = lanchesSelecionados.indexOf(existente);
-        lanchesSelecionados.splice(index, 1);
-      }
-    } else if (quantidadeAtual > 0) {
-      lanchesSelecionados.push({
-        nome,
-        preco,
-        quantidade: quantidadeAtual,
-        total: preco * quantidadeAtual
-      });
-    }
+const selecionados = computed(() =>
+  lanches
+    .map((l, index) => ({
+      ...l,
+      index,
+      preco: precos[l.nome],
+      total: l.quantidade * precos[l.nome]
+    }))
+    .filter(l => l.quantidade > 0)
+)
 
-    atualizarListaLanches();
-  }
-
-  function atualizarListaLanches() {
-    const lista = document.getElementById("selecionados");
-    lista.innerHTML = "";
-    let total = 0;
-
-    lanchesSelecionados.forEach((item, index) => {
-      const subtotal = item.quantidade * item.preco;
-      const li = document.createElement("li");
-      li.innerHTML = `${item.nome} x${item.quantidade} – R$ ${subtotal.toFixed(2)}
-      <button onclick="removerLanche(${index})">Remover</button>`;
-
-      lista.appendChild(li);
-      total += subtotal;
-    });
-
-    document.getElementById("valor").innerHTML = `<strong>Total:</strong> R$ ${total.toFixed(2)}`;
-
-  }
-
-  function removerLanche(index) {
-    const item = lanchesSelecionados[index];
-    lanchesSelecionados.splice(index, 1);
-
-    const cards = document.querySelectorAll('.lanches ul li');
-    cards.forEach(li => {
-      const nome = li.querySelector('p').textContent.trim();
-      if (nome === item.nome) {
-        li.querySelector('.quantidade').textContent = "0";
-      }
-    });
-
-    atualizarListaLanches();
-  }
-
-  function limparLanches() {
-    lanchesSelecionados.length = 0;
-    document.querySelectorAll('.quantidade').forEach(el => el.textContent = "0");
-    atualizarListaLanches();
-  }
+const total = computed(() =>
+  selecionados.value.reduce((soma, item) => soma + item.total, 0)
+)
 </script>
 <template>
   <section class="lanches">
     <ul>
-      <li>
-        <img src="/images/sanduiches-veg-vegetariano.jpg" alt="Vegetariano" />
-        <p>Sanduíche Vegetariano</p>
-        <p class="preco">R$ 34,00</p>
+      <li v-for="(lanche, index) in lanches" :key="index">
+        <img :src="lanche.imagem" :alt="lanche.nome" />
+        <p>{{ lanche.nome }}</p>
+        <p class="preco">R$ {{ precos[lanche.nome].toFixed(2) }}</p>
         <div class="controle">
-          <button onclick="alterarQuantidade(this, -1)">–</button>
-          <span class="quantidade">0</span>
-          <button onclick="alterarQuantidade(this, 1)">+</button>
+          <button @click="alterarQuantidade(index, -1)">–</button>
+          <span class="quantidade">{{ lanche.quantidade }}</span>
+          <button @click="alterarQuantidade(index, 1)">+</button>
         </div>
       </li>
-
-      <li>
-        <img src="/images/sanduiches-embutidos-presunto.jpg" alt="Presunto" />
-        <p>Sanduíche de Presunto</p>
-        <p class="preco">R$ 34,00</p>
-        <div class="controle">
-          <button onclick="alterarQuantidade(this, -1)">–</button>
-          <span class="quantidade">0</span>
-          <button onclick="alterarQuantidade(this, 1)">+</button>
-        </div>
-      </li>
-
-      <li>
-        <img src="/images/sanduiches-embutidos-bmt-italiano.jpg" alt="BMT Italiano" />
-        <p>Sanduíche Italiano</p>
-        <p class="preco">R$ 34,00</p>
-        <div class="controle">
-          <button onclick="alterarQuantidade(this, -1)">–</button>
-          <span class="quantidade">0</span>
-          <button onclick="alterarQuantidade(this, 1)">+</button>
-        </div>
-      </li>
-
-      <li>
-        <img src="/images/sanduiches-embutidos-bmt-italiano.jpg" alt="BMT Italiano" />
-        <p>Sanduíche Italiano</p>
-        <p class="preco">R$ 34,00</p>
-        <div class="controle">
-          <button onclick="alterarQuantidade(this, -1)">–</button>
-          <span class="quantidade">0</span>
-          <button onclick="alterarQuantidade(this, 1)">+</button>
-        </div>
-      </li>
-
-      <li>
-        <img src="/images/sanduiches-carne-supreme.jpg" alt="Carne Supreme" />
-        <p>Sanduíche Carne Suprema</p>
-        <p class="preco">R$ 34,00</p>
-        <div class="controle">
-          <button onclick="alterarQuantidade(this, -1)">–</button>
-          <span class="quantidade">0</span>
-          <button onclick="alterarQuantidade(this, 1)">+</button>
-        </div>
-      </li>
-
-      <li>
-        <img src="/images/sanduiches-frango-teriyaki.jpg" alt="Frango Teriyaki" />
-        <p>Sanduíche Frango Teriyaki</p>
-        <p class="preco">R$ 34,00</p>
-        <div class="controle">
-          <button onclick="alterarQuantidade(this, -1)">–</button>
-          <span class="quantidade">0</span>
-          <button onclick="alterarQuantidade(this, 1)">+</button>
-        </div>
-      </li>
-       <section class="resumo">
-          <h3>Lanches Selecionados:</h3>
-          <ul id="selecionados"></ul>
-          <p id="valor"><strong>Total:</strong> R$ 0.00</p>
-          <button onclick="limparLanches()">Limpar Tudo</button>
-        </section>
     </ul>
 
+    <div class="selecionados" v-if="selecionados.length">
+      <h3>Ingredientes Selecionados:</h3>
+      <ul>
+        <li v-for="item in selecionados" :key="item.index">
+          <span>{{ item.nome }} ({{ item.quantidade }}) - R$ {{ item.total.toFixed(2) }}</span>
+          <button class="btn-remover" @click="removerLanche(item.index)">Remover</button>
+        </li>
+      </ul>
+      <p id="valor-total"><strong>Total: R$ {{ total.toFixed(2) }}</strong></p>
+      <button class="btn-limpar" @click="limparLanches">Limpar Tudo 🧹</button>
+    </div>
+
     <section class="botoes">
-      <router-link to="/bebidas"><button>
-        <span class="fas fa-bottle-water"></span>
-      </button></router-link>
-      <router-link to="/montarlanche"><button>
-        <span class="fas fa-hamburger"></span>
-      </button></router-link>
-      <router-link to="/entregaretirada"><button>
-        <span class="fas fa-arrow-right"></span>
-      </button></router-link>
+      <router-link to="/bebidas"><button><span class="fas fa-bottle-water"></span></button></router-link>
+      <router-link to="/montarlanche"><button><span class="fas fa-hamburger"></span></button></router-link>
+      <router-link to="/entregaretirada"><button><span class="fas fa-arrow-right"></span></button></router-link>
     </section>
   </section>
 </template>
-
 <style scoped>
-/* Lanches */
-
+/* ---------- GERAL ---------- */
 .pg1 {
   background-color: white;
   color: #006633;
 }
 
+/* ---------- LISTA DE LANCHES ---------- */
 .lanches ul {
   display: flex;
   flex-wrap: wrap;
   justify-content: center;
   padding: 20px;
   gap: 20px;
-  justify-items: center;
-}
-
-.lanches img {
-  width: 100px;
-  border-radius: 12px;
-}
-
-.lanches p {
-  margin-top: 10px;
-  font-size: 18px;
-  font-weight: bold;
 }
 
 .lanches ul li {
@@ -213,7 +110,7 @@
   box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
 
-.lanches ul li img {
+.lanches img {
   width: 100px;
   height: auto;
   border-radius: 8px;
@@ -231,8 +128,7 @@
   color: #009639;
 }
 
-/* Controle de quantidade */
-
+/* ---------- CONTROLE DE QUANTIDADE ---------- */
 .controle {
   display: flex;
   justify-content: center;
@@ -269,9 +165,7 @@
   color: #333;
 }
 
-
-/* Botões */
-
+/* ---------- BOTÕES DE NAVEGAÇÃO ---------- */
 .botoes {
   display: flex;
   justify-content: center;
@@ -296,11 +190,76 @@
   background-color: #e6bc00;
 }
 
-.adicionar {
-  background-color: #e6bc00;
+/* ---------- SELECIONADOS ---------- */
+.selecionados {
+  background-color: #f9f9f9;
+  padding: 15px;
+  border-radius: 8px;
+  margin-top: 20px;
+  border: 1px solid #ccc;
+  width: fit-content;
+  max-width: 100%;
+}
+
+.selecionados h3 {
+  margin: 0 0 10px;
+  color: #009639;
+  font-size: 1.1em;
+}
+
+.selecionados ul {
+  list-style: none;
+  padding-left: 0;
+  margin: 0;
+  width: 100%;
+}
+
+.selecionados li {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #009639;
+  font-weight: bold;
+  margin-bottom: 5px;
+  background-color: white;
+  padding: 6px 10px;
+  border-radius: 6px;
+  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+}
+
+.btn-remover {
+  background-color: #9e2a1d;
+  color: white;
   border: none;
-  border-radius: 10px;
-  color: #006633;
-  font-size: 22px;
+  padding: 5px 10px;
+  border-radius: 4px;
+  font-size: 0.85em;
+  cursor: pointer;
+}
+
+.btn-remover:hover {
+  background-color: #741e14;
+}
+
+#valor-total {
+  margin-top: 10px;
+  font-size: 1.2em;
+  color: #009639;
+  font-weight: bold;
+}
+
+.btn-limpar {
+  margin-top: 10px;
+  background-color: #009639;
+  color: white;
+  border: none;
+  padding: 6px 12px;
+  border-radius: 6px;
+  font-size: 0.95em;
+  cursor: pointer;
+}
+
+.btn-limpar:hover {
+  background-color: #007d32;
 }
 </style>

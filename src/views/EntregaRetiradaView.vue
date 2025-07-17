@@ -35,6 +35,9 @@ function finalizarPedido() {
               <router-link to="/pagamento"><button class="opcao-btn">🏃‍♂️ Retirada</button></router-link>
               <router-link to="/enderecoentrega"><button class="opcao-btn">🛵 Entrega</button></router-link> 
             </div>
+             <div class="botoes-navegacao">
+                <router-link to="/bebidas"><button id="btn-voltar">Voltar</button></router-link>
+            </div>
         </section> 
 </template>
 <style scoped>
@@ -85,5 +88,25 @@ function finalizarPedido() {
 
 .finalizar button:hover {
   background-color: #ffd633;
+}
+.botoes-navegacao {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 1000;
+}
+
+.botoes-navegacao button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #009639;
+  color: white;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
 }
 </style>
