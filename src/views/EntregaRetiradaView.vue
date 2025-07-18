@@ -50,6 +50,7 @@ function finalizarPedido() {
   background-color: #f1f1f1;
   border-radius: 12px;
   border: 1px solid #ccc;
+  color: #003a23;
 }
 
 .opcoes {
@@ -103,10 +104,11 @@ function finalizarPedido() {
 .botoes-navegacao button {
   padding: 10px 20px;
   font-size: 16px;
-  background-color: #009639;
-  color: white;
+  background-color: #ffcb05;
+  color: #003a23;
   border: none;
   border-radius: 10px;
   cursor: pointer;
+  font-weight: bold;
 }
 </style>

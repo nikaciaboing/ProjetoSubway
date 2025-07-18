@@ -43,3 +43,12 @@ button {
   padding: 10px;
   border-radius: 10px;
 }
+
+html, body, #app {
+  height: 100%;
+}
+
+#app {
+  display: flex;
+  flex-direction: column;
+}

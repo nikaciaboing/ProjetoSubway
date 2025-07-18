@@ -1,5 +1,8 @@
 <script setup>
-import { reactive, computed } from 'vue'
+import { reactive } from 'vue'
+import { useCarrinhoStore } from '@/stores/carrinho'
+
+const carrinho = useCarrinhoStore()
 
 const precos = {
   "Sanduíche Vegetariano": 34.00,
@@ -11,43 +14,43 @@ const precos = {
 }
 
 const lanches = reactive([
-  { nome: "Sanduíche Vegetariano", imagem: "/images/sanduiches-veg-vegetariano.jpg", quantidade: 0 },
-  { nome: "Sanduíche Frango Teriyaki", imagem: "/images/sanduiches-frango-teriyaki.jpg", quantidade: 0 },
-  { nome: "Sanduíche de Presunto", imagem: "/images/sanduiches-embutidos-presunto.jpg", quantidade: 0 },
-  { nome: "Sanduíche Italiano", imagem: "/images/sanduiches-embutidos-bmt-italiano.jpg", quantidade: 0 },
-  { nome: "Sanduíche Carne Suprema", imagem: "/images/sanduiches-carne-supreme.jpg", quantidade: 0 },
-  { nome: "Sanduíche Carne Seca c/ Cream Cheese", imagem: "/images/sanduiches-embutidos-bmt-italiano.jpg", quantidade: 0 }
+  { nome: "Sanduíche Vegetariano", imagem: "/images/sanduiches-veg-vegetariano.jpg" },
+  { nome: "Sanduíche Frango Teriyaki", imagem: "/images/sanduiches-frango-teriyaki.jpg" },
+  { nome: "Sanduíche de Presunto", imagem: "/images/sanduiches-embutidos-presunto.jpg" },
+  { nome: "Sanduíche Italiano", imagem: "/images/sanduiches-embutidos-bmt-italiano.jpg" },
+  { nome: "Sanduíche Carne Suprema", imagem: "/images/sanduiches-carne-supreme.jpg" },
+  { nome: "Sanduíche Carne Seca c/ Cream Cheese", imagem: "/images/sanduiches-embutidos-bmt-italiano.jpg" }
 ])
 
 function alterarQuantidade(index, delta) {
   const lanche = lanches[index]
-  lanche.quantidade = Math.max(0, lanche.quantidade + delta)
+  const lancheComPreco = {
+    nome: lanche.nome,
+    preco: precos[lanche.nome]
+  }
+
+  if (delta > 0) {
+    carrinho.adicionarItem(lancheComPreco)
+  } else {
+    carrinho.removerItem(lanche.nome)
+  }
 }
-
-function removerLanche(index) {
-  lanches[index].quantidade = 0
-}
-
-function limparLanches() {
-  lanches.forEach(lanche => lanche.quantidade = 0)
-}
-
-const selecionados = computed(() =>
-  lanches
-    .map((l, index) => ({
-      ...l,
-      index,
-      preco: precos[l.nome],
-      total: l.quantidade * precos[l.nome]
-    }))
-    .filter(l => l.quantidade > 0)
-)
-
-const total = computed(() =>
-  selecionados.value.reduce((soma, item) => soma + item.total, 0)
-)
 </script>
+
 <template>
+  <!-- Carrinho fixo no topo -->
+  <div class="carrinho-fixo" v-if="carrinho.itens.length">
+    <h3>🛒 Carrinho</h3>
+    <ul>
+      <li v-for="item in carrinho.itens" :key="item.nome">
+        {{ item.nome }} ({{ item.quantidade }}) - R$ {{ (item.preco * item.quantidade).toFixed(2) }}
+      </li>
+    </ul>
+    <p class="total">Total: R$ {{ carrinho.total }}</p>
+    <button @click="carrinho.limparCarrinho">Esvaziar Carrinho</button>
+  </div>
+
+  <!-- Lista de lanches -->
   <section class="lanches">
     <ul>
       <li v-for="(lanche, index) in lanches" :key="index">
@@ -56,24 +59,13 @@ const total = computed(() =>
         <p class="preco">R$ {{ precos[lanche.nome].toFixed(2) }}</p>
         <div class="controle">
           <button @click="alterarQuantidade(index, -1)">–</button>
-          <span class="quantidade">{{ lanche.quantidade }}</span>
+          <span class="quantidade">{{ carrinho.getQuantidade(lanche.nome) }}</span>
           <button @click="alterarQuantidade(index, 1)">+</button>
         </div>
       </li>
     </ul>
 
-    <div class="selecionados" v-if="selecionados.length">
-      <h3>Ingredientes Selecionados:</h3>
-      <ul>
-        <li v-for="item in selecionados" :key="item.index">
-          <span>{{ item.nome }} ({{ item.quantidade }}) - R$ {{ item.total.toFixed(2) }}</span>
-          <button class="btn-remover" @click="removerLanche(item.index)">Remover</button>
-        </li>
-      </ul>
-      <p id="valor-total"><strong>Total: R$ {{ total.toFixed(2) }}</strong></p>
-      <button class="btn-limpar" @click="limparLanches">Limpar Tudo 🧹</button>
-    </div>
-
+    <!-- Navegação -->
     <section class="botoes">
       <router-link to="/bebidas"><button><span class="fas fa-bottle-water"></span></button></router-link>
       <router-link to="/montarlanche"><button><span class="fas fa-hamburger"></span></button></router-link>
@@ -81,14 +73,13 @@ const total = computed(() =>
     </section>
   </section>
 </template>
+
 <style scoped>
-/* ---------- GERAL ---------- */
 .pg1 {
   background-color: white;
   color: #006633;
 }
 
-/* ---------- LISTA DE LANCHES ---------- */
 .lanches ul {
   display: flex;
   flex-wrap: wrap;
@@ -128,7 +119,6 @@ const total = computed(() =>
   color: #009639;
 }
 
-/* ---------- CONTROLE DE QUANTIDADE ---------- */
 .controle {
   display: flex;
   justify-content: center;
@@ -165,7 +155,6 @@ const total = computed(() =>
   color: #333;
 }
 
-/* ---------- BOTÕES DE NAVEGAÇÃO ---------- */
 .botoes {
   display: flex;
   justify-content: center;
@@ -190,76 +179,43 @@ const total = computed(() =>
   background-color: #e6bc00;
 }
 
-/* ---------- SELECIONADOS ---------- */
-.selecionados {
-  background-color: #f9f9f9;
-  padding: 15px;
-  border-radius: 8px;
-  margin-top: 20px;
-  border: 1px solid #ccc;
-  width: fit-content;
-  max-width: 100%;
-}
-
-.selecionados h3 {
-  margin: 0 0 10px;
-  color: #009639;
-  font-size: 1.1em;
-}
-
-.selecionados ul {
-  list-style: none;
-  padding-left: 0;
-  margin: 0;
-  width: 100%;
-}
-
-.selecionados li {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  color: #009639;
+/* Carrinho fixo no topo */
+.carrinho-fixo {
+  position: sticky;
+  top: 0;
+  background-color: #fff7d6;
+  border-bottom: 2px solid #e6bc00;
+  padding: 10px 20px;
+  z-index: 999;
+  color: #006633;
   font-weight: bold;
-  margin-bottom: 5px;
-  background-color: white;
-  padding: 6px 10px;
-  border-radius: 6px;
-  box-shadow: 0 1px 3px rgba(0,0,0,0.1);
+  box-shadow: 0 2px 4px rgba(0,0,0,0.05);
 }
 
-.btn-remover {
+.carrinho-fixo ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.carrinho-fixo li {
+  font-size: 14px;
+  margin-bottom: 4px;
+}
+
+.carrinho-fixo .total {
+  margin-top: 6px;
+  font-size: 16px;
+  color: #009639;
+}
+
+.carrinho-fixo button {
+  margin-top: 8px;
   background-color: #9e2a1d;
   color: white;
   border: none;
-  padding: 5px 10px;
+  padding: 4px 12px;
   border-radius: 4px;
-  font-size: 0.85em;
   cursor: pointer;
-}
-
-.btn-remover:hover {
-  background-color: #741e14;
-}
-
-#valor-total {
-  margin-top: 10px;
-  font-size: 1.2em;
-  color: #009639;
-  font-weight: bold;
-}
-
-.btn-limpar {
-  margin-top: 10px;
-  background-color: #009639;
-  color: white;
-  border: none;
-  padding: 6px 12px;
-  border-radius: 6px;
-  font-size: 0.95em;
-  cursor: pointer;
-}
-
-.btn-limpar:hover {
-  background-color: #007d32;
 }
 </style>

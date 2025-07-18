@@ -12,13 +12,25 @@ watchEffect(() => {
 </script>
 
 <template>
-  <HeaderComponnent v-if="route.path !== '/'" />
+  <div class="app-wrapper">
+    <HeaderComponnent v-if="route.path !== '/'" />
 
-  <router-view />
+    <main class="conteudo">
+      <router-view />
+    </main>
 
-  <FooterComponnent />
+    <FooterComponnent />
+  </div>
 </template>
 
 <style scoped>
+.app-wrapper {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
 
+.conteudo {
+  flex: 1; 
+}
 </style>

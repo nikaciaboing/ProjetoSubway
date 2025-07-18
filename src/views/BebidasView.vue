@@ -359,11 +359,12 @@ button {
 .botoes-navegacao button {
   padding: 10px 20px;
   font-size: 16px;
-  background-color: #009639;
-  color: white;
+  background-color: #ffcb05;
+  color: #003a23;
   border: none;
   border-radius: 10px;
   cursor: pointer;
+  font-weight: bold;
 }
 
 .botoes-navegacao button:hover {

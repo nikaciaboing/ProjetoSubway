@@ -96,6 +96,10 @@ function copiarChavePix() {
       />
       <p>{{ troco }}</p>
     </div>
+     <div class="botoes-navegacao">
+        <router-link to="/entregaretirada"><button id="btn-voltar">Voltar</button></router-link>
+        <router-link to="/preparando"><button id="btn-proximo">Próximo</button></router-link>
+      </div>
   </section>
 </template>
 
@@ -167,5 +171,34 @@ input {
   margin-top: 10px;
   font-weight: bold;
   text-align: center;
+}
+.botoes-navegacao {
+  position: fixed;
+  bottom: 20px;
+  left: 0;
+  right: 0;
+  display: flex;
+  justify-content: space-between;
+  padding: 0 20px;
+  z-index: 1000;
+}
+
+.botoes-navegacao button {
+  padding: 10px 20px;
+  font-size: 16px;
+  background-color: #ffcb05;
+  color: #003a23;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+.botoes-navegacao button:hover {
+  background-color: #176829;
+}
+
+button:hover {
+  background-color: #176829; 
 }
 </style>
